@@ -17,7 +17,12 @@ from kivy.core.window import Window
 from kivy.uix.widget import Widget
 from kivy.graphics import Color
 from kivy.uix.label import Label
+import qrcode
+from Config import Config
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.popup import Popup
 
+config = Config()
 
 class App(MDApp):
     def __init__(self, **kwargs):
@@ -92,7 +97,7 @@ class App(MDApp):
     def run(self, queue: multiprocessing.Queue):
         self.queue = queue
         super().run()
-
+    
     def build_app(self, first=False):
         self.theme_cls = ThemeManager()
         self.theme_cls.theme_style = "Dark"
@@ -122,10 +127,37 @@ class App(MDApp):
             text=IPAddr, pos_hint={"x": 0.85, "bottom": 1}, size_hint=[0.1, 0.1]
         )
 
+        # Create a button to show the QR code
+        qr_button = IconButton(
+            source = "./Skills/GUI/qrcode-solid.png",
+            pos_hint={"x": 0.015, "top": .95},
+            size_hint =(.05, .05)
+        )
+        qr_button.bind(on_press=self.show_qr_code)
+
         screen.add_widget(self.eyes)
         screen.add_widget(self.line)
         screen.add_widget(self.label)
+        screen.add_widget(qr_button)  # Add the button to the screen
 
+        
+        self.screen = screen
         layout.add_widget(screen)
-
+        
         return layout
+
+    def show_qr_code(self, instance):
+
+        img = qrcode.make(config["UID"])
+        
+        img.save("./Skills/GUI/qr.png")
+        
+        # Create a popup to display the QR code
+        qr_code_image = Image(source='./Skills/GUI/qr.png')
+        qr_code_popup = Popup(title='QR Code', content=qr_code_image, size_hint=(None, None), size=(300, 300))
+        qr_code_popup.open()
+        
+        
+class IconButton(ButtonBehavior, Image):
+    def on_press(self):
+        print("on_press")
