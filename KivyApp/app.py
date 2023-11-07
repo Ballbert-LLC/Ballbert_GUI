@@ -133,7 +133,7 @@ class App(MDApp):
             pos_hint={"x": 0.015, "top": .95},
             size_hint =(.05, .05)
         )
-        qr_button.bind(on_press=self.show_qr_code)
+        qr_button.bind(on_release=self.show_qr_code)
 
         screen.add_widget(self.eyes)
         screen.add_widget(self.line)
