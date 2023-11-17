@@ -66,7 +66,7 @@ class GUI(Skill):
         
         event_handler.on("indecator_bar_color", indecator_bar_color)
         
-        def change_color_blue(_):
+        def change_color_blue():
             self.change_indecator_bar_color("blue")
         
         event_handler.on("Keyword", change_color_blue)
